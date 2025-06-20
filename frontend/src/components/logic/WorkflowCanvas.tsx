@@ -1,6 +1,6 @@
 import React, { useState, useRef, useCallback } from 'react'
 import { motion } from 'framer-motion'
-import { Plus, Play, Square, MoreVertical, Trash2, Copy, Edit3 } from 'lucide-react'
+import { Plus, Play, MoreVertical, Trash2, Copy, Edit3 } from 'lucide-react'
 import { Workflow, WorkflowNode, WorkflowConnection, Position } from '@/types'
 import { Button } from '@/components/common/Button'
 import { useWorkflow } from '@/hooks/useWorkflow'
@@ -17,7 +17,7 @@ interface NodeComponentProps {
   onDelete: () => void
 }
 
-const NodeComponent: React.FC<NodeComponentProps> = ({ node, isSelected, onSelect, onMove, onDelete }) => {
+const NodeComponent: React.FC<NodeComponentProps> = ({ node, isSelected, onSelect, onMove }) => {
   const [isDragging, setIsDragging] = useState(false)
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 })
   const [position, setPosition] = useState(node.position)
@@ -129,9 +129,8 @@ const NodeComponent: React.FC<NodeComponentProps> = ({ node, isSelected, onSelec
 }
 
 export const WorkflowCanvas: React.FC<WorkflowCanvasProps> = ({ workflow }) => {
-  const { selectedNode, selectNode, updateNode, deleteNode, addConnection } = useWorkflow()
+  const { selectedNode, selectNode, updateNode, deleteNode } = useWorkflow()
   const canvasRef = useRef<HTMLDivElement>(null)
-  const [connecting, setConnecting] = useState<{ nodeId: string; portId: string } | null>(null)
 
   const handleNodeMove = (nodeId: string, position: Position) => {
     updateNode(nodeId, { position })

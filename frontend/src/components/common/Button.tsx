@@ -3,7 +3,7 @@ import { motion } from 'framer-motion'
 import { LucideIcon } from 'lucide-react'
 
 interface ButtonProps {
-  children: React.ReactNode
+  children?: React.ReactNode
   variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger'
   size?: 'sm' | 'md' | 'lg'
   icon?: LucideIcon
@@ -12,7 +12,7 @@ interface ButtonProps {
   disabled?: boolean
   fullWidth?: boolean
   className?: string
-  onClick?: () => void
+  onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void
   type?: 'button' | 'submit' | 'reset'
 }
 

@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { motion } from 'framer-motion'
-import { Plus, Edit3, Trash2, Key, Database, Settings } from 'lucide-react'
+import { Plus, Edit3, Trash2, Key, Database } from 'lucide-react'
 import { DatabaseTable, DatabaseField, FieldType } from '@/types'
 import { Button } from '@/components/common/Button'
 import { Modal } from '@/components/common/Modal'
@@ -13,7 +13,7 @@ interface FieldEditorProps {
 export const FieldEditor: React.FC<FieldEditorProps> = ({ table }) => {
   const { createField, updateField, deleteField, selectField, selectedField } = useDatabase()
   const [showNewFieldModal, setShowNewFieldModal] = useState(false)
-  const [editingField, setEditingField] = useState<DatabaseField | null>(null)
+  const [_editingField, setEditingField] = useState<DatabaseField | null>(null)
   const [newField, setNewField] = useState({
     name: '',
     displayName: '',
@@ -120,12 +120,11 @@ export const FieldEditor: React.FC<FieldEditorProps> = ({ table }) => {
             variant="ghost"
             size="sm"
             icon={Plus}
-            onClick={() => setShowNewFieldModal(true)}
-          />
+            onClick={() => setShowNewFieldModal(true)} children={undefined} />
         </div>
-        
+
         <div className="flex items-center space-x-2 text-sm text-gray-600">
-          <div 
+          <div
             className="w-3 h-3 rounded"
             style={{ backgroundColor: table.color }}
           />
@@ -158,7 +157,7 @@ export const FieldEditor: React.FC<FieldEditorProps> = ({ table }) => {
                   <span className="font-medium text-gray-900">{field.displayName}</span>
                   <span className="text-xs text-gray-500">({field.name})</span>
                 </div>
-                
+
                 <div className="flex items-center space-x-1">
                   {field.required && (
                     <span className="px-1 text-xs bg-red-100 text-red-600 rounded">Required</span>
@@ -171,7 +170,7 @@ export const FieldEditor: React.FC<FieldEditorProps> = ({ table }) => {
                   )}
                 </div>
               </div>
-              
+
               <div className="flex items-center justify-between">
                 <span className="text-sm text-gray-600 uppercase">{field.type}</span>
                 <div className="flex items-center space-x-1">
@@ -197,7 +196,7 @@ export const FieldEditor: React.FC<FieldEditorProps> = ({ table }) => {
                   />
                 </div>
               </div>
-              
+
               {field.description && (
                 <p className="text-xs text-gray-500 mt-1">{field.description}</p>
               )}
@@ -224,7 +223,7 @@ export const FieldEditor: React.FC<FieldEditorProps> = ({ table }) => {
       {selectedField && (
         <div className="border-t border-gray-200 p-4">
           <h4 className="font-semibold text-gray-900 mb-3">Field Properties</h4>
-          
+
           <div className="space-y-3">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">

@@ -469,21 +469,18 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({ component }) =
             variant="ghost"
             size="sm"
             icon={component.visible ? Eye : EyeOff}
-            onClick={() => updateProperty('visible', !component.visible)}
-          />
+            onClick={() => updateProperty('visible', !component.visible)} children={undefined}          />
           <Button
             variant="ghost"
             size="sm"
             icon={component.locked ? Lock : Unlock}
-            onClick={() => updateProperty('locked', !component.locked)}
-          />
+            onClick={() => updateProperty('locked', !component.locked)} children={undefined}          />
           <Button
             variant="ghost"
             size="sm"
             icon={Trash2}
             onClick={() => deleteComponent(component.id)}
-            className="text-red-600 hover:text-red-700"
-          />
+            className="text-red-600 hover:text-red-700" children={undefined}          />
         </div>
       </div>
 

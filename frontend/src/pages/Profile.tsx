@@ -2,9 +2,9 @@ import React, { useState } from 'react'
 import { motion } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
 import { 
-  User, Mail, Lock, Bell, Palette, Globe, 
+  User, Lock, Bell, Palette,
   ArrowLeft, Camera, Save, LogOut, Trash2,
-  Shield, CreditCard, Download, Upload
+  Shield,
 } from 'lucide-react'
 import { Button } from '@/components/common/Button'
 import { Modal } from '@/components/common/Modal'

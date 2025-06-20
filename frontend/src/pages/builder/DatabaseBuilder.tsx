@@ -3,15 +3,14 @@ import { useParams, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { 
   Database, Plus, Save, ArrowLeft, Table, Link, Settings, 
-  Download, Upload, Play, Trash2, Copy, Edit3, Key,
-  Columns, Relationship, FileText, Search
+  Download, Upload, Key,
+  Columns, Search
 } from 'lucide-react'
 import { Button } from '@/components/common/Button'
 import { Modal } from '@/components/common/Modal'
 import { LoadingSpinner } from '@/components/common/LoadingSpinner'
 import { TableDesigner } from '@/components/database/TableDesigner'
 import { FieldEditor } from '@/components/database/FieldEditor'
-import { RelationshipMapper } from '@/components/database/RelationshipMapper'
 import { useDatabase } from '@/hooks/useDatabase'
 
 const DatabaseBuilder: React.FC = () => {
@@ -20,19 +19,15 @@ const DatabaseBuilder: React.FC = () => {
   const {
     schema,
     selectedTable,
-    selectedField,
     isLoading,
     error,
     loadSchema,
     saveSchema,
     createTable,
-    updateTable,
-    deleteTable,
     selectTable,
   } = useDatabase()
 
   const [showNewTableModal, setShowNewTableModal] = useState(false)
-  const [showImportModal, setShowImportModal] = useState(false)
   const [newTableName, setNewTableName] = useState('')
   const [newTableDisplayName, setNewTableDisplayName] = useState('')
   const [viewMode, setViewMode] = useState<'visual' | 'sql'>('visual')
@@ -226,7 +221,7 @@ const DatabaseBuilder: React.FC = () => {
             <h3 className="text-lg font-semibold text-gray-900 mb-4">Database Overview</h3>
             
             <div className="grid grid-cols-2 gap-3 mb-6">
-              {stats.map((stat, index) => (
+              {stats.map((stat, _index) => (
                 <div key={stat.label} className="bg-gray-50 rounded-lg p-3">
                   <div className="flex items-center justify-between">
                     <div>

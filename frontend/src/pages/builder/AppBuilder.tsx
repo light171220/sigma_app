@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { 
-  Save, Play, Settings, Database, Workflow, Share, 
-  Undo, Redo, Layers, Smartphone, Tablet, Monitor,
-  Eye, EyeOff, Grid, ZoomIn, ZoomOut
+  Save, Play, Settings, Database, Workflow,
+  Undo, Redo, Layers, Smartphone, Tablet,
+  Eye, EyeOff, ZoomIn, ZoomOut
 } from 'lucide-react'
 import { Button } from '@/components/common/Button'
 import { LoadingSpinner } from '@/components/common/LoadingSpinner'

@@ -23,14 +23,14 @@ export const ComponentRenderer: React.FC<ComponentRendererProps> = ({
   const [isDragging, setIsDragging] = useState(false)
   const [isResizing, setIsResizing] = useState(false)
 
-  const handleDragStop = (e: any, data: any) => {
+  const handleDragStop = (_e: any, data: any) => {
     setIsDragging(false)
     updateComponent(component.id, {
       position: { x: data.x, y: data.y }
     })
   }
 
-  const handleResizeStop = (e: any, direction: any, ref: any, delta: any, position: any) => {
+  const handleResizeStop = (_e: any, _direction: any, ref: any, _delta: any, position: any) => {
     setIsResizing(false)
     updateComponent(component.id, {
       size: { 

@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Plus, MoreVertical, Home, Eye, Settings, Trash2, Copy } from 'lucide-react'
+import { Plus, MoreVertical, Home, Eye, Trash2, Copy } from 'lucide-react'
 import { Button } from '@/components/common/Button'
 import { Modal } from '@/components/common/Modal'
 import { useAppBuilder } from '@/hooks/useAppBuilder'
@@ -97,8 +97,7 @@ export const ScreenManager: React.FC = () => {
           variant="ghost"
           size="sm"
           icon={Plus}
-          onClick={() => setShowNewScreenModal(true)}
-        />
+          onClick={() => setShowNewScreenModal(true)} children={undefined} />
       </div>
 
       <div className="space-y-1 max-h-48 overflow-y-auto scrollbar-thin">
@@ -136,6 +135,7 @@ export const ScreenManager: React.FC = () => {
 
                 <div className="relative">
                   <button
+                    title="Show screen options"
                     onClick={(e) => {
                       e.stopPropagation()
                       setSelectedScreenMenu(

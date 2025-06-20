@@ -9,13 +9,12 @@ import { useDatabase } from '@/hooks/useDatabase'
 export const RelationshipMapper: React.FC = () => {
   const { 
     schema, 
-    createRelationship, 
-    updateRelationship, 
+    createRelationship,
     deleteRelationship 
   } = useDatabase()
   
   const [showNewRelationshipModal, setShowNewRelationshipModal] = useState(false)
-  const [editingRelationship, setEditingRelationship] = useState<Relationship | null>(null)
+  const [_editingRelationship, setEditingRelationship] = useState<Relationship | null>(null)
   const [newRelationship, setNewRelationship] = useState({
     name: '',
     type: 'one-to-many' as RelationshipType,

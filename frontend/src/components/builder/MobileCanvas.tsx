@@ -1,7 +1,6 @@
 import React from 'react'
-import { motion } from 'framer-motion'
 import { useDrop } from 'react-dnd'
-import { Component, Screen, Device } from '@/types'
+import { Screen, Device } from '@/types'
 import { ComponentRenderer } from './ComponentRenderer'
 import { useAppBuilder } from '@/hooks/useAppBuilder'
 import { getMobileComponentDefaults, getComponentSize } from '@/utils/mobileComponents'
@@ -19,32 +18,32 @@ export const MobileCanvas: React.FC<MobileCanvasProps> = ({
 }) => {
   const { selectedComponent, selectComponent, addComponent } = useAppBuilder()
 
+  const canvasRef = React.useRef<HTMLDivElement>(null);
+
   const [{ isOver }, drop] = useDrop({
     accept: 'component',
     drop: (item: any, monitor) => {
       const offset = monitor.getClientOffset()
-      if (offset) {
-        const canvasRect = monitor.getDropResult()?.getBoundingClientRect()
-        if (canvasRect) {
-          const x = offset.x - canvasRect.left
-          const y = offset.y - canvasRect.top
-          
-          const size = getComponentSize(item.componentType)
-          const defaults = getMobileComponentDefaults(item.componentType)
-          
-          addComponent({
-            type: item.componentType,
-            name: `${item.componentType}_${Date.now()}`,
-            position: { x, y },
-            size,
-            properties: defaults.properties,
-            style: defaults.style,
-            events: {},
-            conditions: {},
-            visible: true,
-            locked: false,
-          })
-        }
+      if (offset && canvasRef.current) {
+        const canvasRect = canvasRef.current.getBoundingClientRect()
+        const x = offset.x - canvasRect.left
+        const y = offset.y - canvasRect.top
+
+        const size = getComponentSize(item.componentType)
+        const defaults = getMobileComponentDefaults(item.componentType)
+
+        addComponent({
+          type: item.componentType,
+          name: `${item.componentType}_${Date.now()}`,
+          position: { x, y },
+          size,
+          properties: defaults.properties,
+          style: defaults.style,
+          events: {},
+          conditions: {},
+          visible: true,
+          locked: false,
+        })
       }
     },
     collect: (monitor) => ({
@@ -62,7 +61,10 @@ export const MobileCanvas: React.FC<MobileCanvasProps> = ({
     <div className="relative">
       <div className="device-mockup" style={{ width: device.width / 2, height: device.height / 2 }}>
         <div
-          ref={drop}
+          ref={node => {
+            canvasRef.current = node;
+            drop(node);
+          }}
           onClick={handleCanvasClick}
           className={`mobile-screen relative overflow-hidden ${isOver ? 'bg-blue-50' : ''}`}
           style={{

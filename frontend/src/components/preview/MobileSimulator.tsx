@@ -1,6 +1,5 @@
 import React, { useState, useRef } from 'react'
-import { motion } from 'framer-motion'
-import { Wifi, Battery, Signal, Volume2 } from 'lucide-react'
+import { Wifi, Battery, Signal } from 'lucide-react'
 import { App, Screen, Device, DeviceOrientation } from '@/types'
 import { ComponentRenderer } from '@/components/builder/ComponentRenderer'
 
@@ -17,7 +16,6 @@ interface MobileSimulatorProps {
 }
 
 export const MobileSimulator: React.FC<MobileSimulatorProps> = ({
-  app,
   screen,
   device,
   orientation,

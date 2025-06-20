@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { Plus, Search, Grid, List, Filter, Smartphone, Users, Zap, TrendingUp } from 'lucide-react'
+import { Plus, Search, Grid, List, Smartphone, Users, Zap, TrendingUp } from 'lucide-react'
 import { Button } from '@/components/common/Button'
 import { Modal } from '@/components/common/Modal'
 import { LoadingSpinner } from '@/components/common/LoadingSpinner'
