@@ -1,0 +1,117 @@
+{{#eq type 'text'}}
+Positioned(
+  left: {{position.x}},
+  top: {{position.y}},
+  child: Container(
+    width: {{size.width}},
+    height: {{size.height}},
+    child: Text(
+      '{{properties.text}}',
+      style: TextStyle(
+        fontSize: {{properties.fontSize}},
+        color: Color(0xFF{{replace properties.color '#' ''}}),
+        fontWeight: {{#eq properties.fontWeight 'bold'}}FontWeight.bold{{else}}FontWeight.normal{{/eq}},
+      ),
+      textAlign: {{#eq properties.textAlign 'center'}}TextAlign.center{{else}}{{#eq properties.textAlign 'right'}}TextAlign.right{{else}}TextAlign.left{{/eq}}{{/eq}},
+    ),
+  ),
+)
+{{/eq}}
+
+{{#eq type 'button'}}
+Positioned(
+  left: {{position.x}},
+  top: {{position.y}},
+  child: Container(
+    width: {{size.width}},
+    height: {{size.height}},
+    child: ElevatedButton(
+      onPressed: () {
+        {{#each actions}}
+        {{#eq trigger 'onPressed'}}
+        {{#eq type 'navigate'}}
+        Navigator.pushNamed(context, '/{{target}}');
+        {{/eq}}
+        {{#eq type 'api_call'}}
+        // API call implementation
+        {{/eq}}
+        {{/eq}}
+        {{/each}}
+      },
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Color(0xFF{{replace properties.backgroundColor '#' ''}}),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular({{properties.borderRadius}}),
+        ),
+      ),
+      child: Text(
+        '{{properties.text}}',
+        style: TextStyle(
+          color: Color(0xFF{{replace properties.textColor '#' ''}}),
+        ),
+      ),
+    ),
+  ),
+)
+{{/eq}}
+
+{{#eq type 'input'}}
+Positioned(
+  left: {{position.x}},
+  top: {{position.y}},
+  child: Container(
+    width: {{size.width}},
+    height: {{size.height}},
+    child: TextField(
+      decoration: InputDecoration(
+        hintText: '{{properties.placeholder}}',
+        border: OutlineInputBorder(),
+      ),
+      keyboardType: {{#eq properties.inputType 'email'}}TextInputType.emailAddress{{else}}{{#eq properties.inputType 'number'}}TextInputType.number{{else}}TextInputType.text{{/eq}}{{/eq}},
+      obscureText: {{properties.isPassword}},
+    ),
+  ),
+)
+{{/eq}}
+
+{{#eq type 'image'}}
+Positioned(
+  left: {{position.x}},
+  top: {{position.y}},
+  child: Container(
+    width: {{size.width}},
+    height: {{size.height}},
+    child: Image.network(
+      '{{properties.url}}',
+      fit: BoxFit.{{properties.fit}},
+      errorBuilder: (context, error, stackTrace) {
+        return Container(
+          color: Colors.grey[300],
+          child: Icon(Icons.image, color: Colors.grey[600]),
+        );
+      },
+    ),
+  ),
+)
+{{/eq}}
+
+{{#eq type 'container'}}
+Positioned(
+  left: {{position.x}},
+  top: {{position.y}},
+  child: Container(
+    width: {{size.width}},
+    height: {{size.height}},
+    decoration: BoxDecoration(
+      color: Color(0xFF{{replace properties.backgroundColor '#' ''}}),
+      borderRadius: BorderRadius.circular({{properties.borderRadius}}),
+      {{#if properties.borderWidth}}
+      border: Border.all(
+        width: {{properties.borderWidth}},
+        color: Color(0xFF{{replace properties.borderColor '#' ''}}),
+      ),
+      {{/if}}
+    ),
+  ),
+)
+{{/eq}}

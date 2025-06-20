@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{appName}} - Admin Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+    <div x-data="adminDashboard()" class="min-h-screen">
+        <!-- Navigation -->
+        <nav class="bg-blue-600 text-white shadow-lg">
+            <div class="max-w-7xl mx-auto px-4">
+                <div class="flex justify-between items-center py-4">
+                    <div class="flex items-center space-x-4">
+                        <h1 class="text-xl font-bold">{{appName}} Admin</h1>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <span class="text-sm">Welcome, Admin</span>
+                        <button @click="logout()" class="bg-blue-700 hover:bg-blue-800 px-3 py-1 rounded">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <div class="flex">
+            <!-- Sidebar -->
+            <aside class="w-64 bg-white shadow-md h-screen">
+                <nav class="mt-8">
+                    <a @click="activeTab = 'dashboard'" 
+                       :class="activeTab === 'dashboard' ? 'bg-blue-50 border-r-2 border-blue-600 text-blue-600' : 'text-gray-600 hover:bg-gray-50'"
+                       class="flex items-center px-6 py-3 cursor-pointer">
+                        <i class="fas fa-tachometer-alt mr-3"></i>
+                        Dashboard
+                    </a>
+                    {{#each databaseSchema.tables}}
+                    <a @click="activeTab = '{{name}}'" 
+                       :class="activeTab === '{{name}}' ? 'bg-blue-50 border-r-2 border-blue-600 text-blue-600' : 'text-gray-600 hover:bg-gray-50'"
+                       class="flex items-center px-6 py-3 cursor-pointer">
+                        <i class="fas fa-table mr-3"></i>
+                        {{capitalize name}}
+                    </a>
+                    {{/each}}
+                    <a @click="activeTab = 'analytics'" 
+                       :class="activeTab === 'analytics' ? 'bg-blue-50 border-r-2 border-blue-600 text-blue-600' : 'text-gray-600 hover:bg-gray-50'"
+                       class="flex items-center px-6 py-3 cursor-pointer">
+                        <i class="fas fa-chart-bar mr-3"></i>
+                        Analytics
+                    </a>
+                    <a @click="activeTab = 'settings'" 
+                       :class="activeTab === 'settings' ? 'bg-blue-50 border-r-2 border-blue-600 text-blue-600' : 'text-gray-600 hover:bg-gray-50'"
+                       class="flex items-center px-6 py-3 cursor-pointer">
+                        <i class="fas fa-cog mr-3"></i>
+                        Settings
+                    </a>
+                </nav>
+            </aside>
+
+            <!-- Content Area -->
+            <main class="flex-1 p-8">
+                <!-- Dashboard Tab -->
+                <div x-show="activeTab === 'dashboard'" class="space-y-6">
+                    <h2 class="text-2xl font-bold text-gray-900">Dashboard Overview</h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        {{#each databaseSchema.tables}}
+                        <div class="bg-white rounded-lg shadow p-6">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-sm font-medium text-gray-600">Total {{capitalize name}}</p>
+                                    <p class="text-3xl font-bold text-gray-900" x-text="stats.{{name}} || 0"></p>
+                                </div>
+                                <div class="bg-blue-500 rounded-full p-3">
+                                    <i class="fas fa-table text-white"></i>
+                                </div>
+                            </div>
+                        </div>
+                        {{/each}}
+                    </div>
+
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <h3 class="text-lg font-semibold mb-4">Recent Activity</h3>
+                        <div class="space-y-3">
+                            <template x-for="activity in recentActivity" :key="activity.id">
+                                <div class="flex items-center space-x-3 p-3 bg-gray-50 rounded">
+                                    <div class="flex-shrink-0">
+                                        <i :class="activity.icon" class="text-blue-500"></i>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm font-medium" x-text="activity.message"></p>
+                                        <p class="text-xs text-gray-500" x-text="activity.time"></p>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                </div>
+
+                {{#each databaseSchema.tables}}
+                <!-- {{capitalize name}} Tab -->
+                <div x-show="activeTab === '{{name}}'" class="space-y-6">
+                    <div class="flex justify-between items-center">
+                        <h2 class="text-2xl font-bold text-gray-900">{{capitalize name}} Management</h2>
+                        <button @click="showCreateModal('{{name}}')" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg">
+                            <i class="fas fa-plus mr-2"></i>Add {{capitalize name}}
+                        </button>
+                    </div>
+
+                    <div class="bg-white rounded-lg shadow">
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+                                        {{#each fields}}
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{capitalize name}}</th>
+                                        {{/each}}
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-gray-200">
+                                    <template x-for="item in data.{{name}}" :key="item.id">
+                                        <tr>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900" x-text="item.id"></td>
+                                            {{#each fields}}
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900" x-text="item.{{name}}"></td>
+                                            {{/each}}
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                                <button @click="editItem('{{../name}}', item)" class="text-blue-600 hover:text-blue-900 mr-3">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                                <button @click="deleteItem('{{../name}}', item.id)" class="text-red-600 hover:text-red-900">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </template>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                {{/each}}
+
+                <!-- Analytics Tab -->
+                <div x-show="activeTab === 'analytics'" class="space-y-6">
+                    <h2 class="text-2xl font-bold text-gray-900">Analytics</h2>
+                    
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <div class="bg-white rounded-lg shadow p-6">
+                            <h3 class="text-lg font-semibold mb-4">User Activity</h3>
+                            <canvas id="userActivityChart" width="400" height="200"></canvas>
+                        </div>
+                        
+                        <div class="bg-white rounded-lg shadow p-6">
+                            <h3 class="text-lg font-semibold mb-4">Data Growth</h3>
+                            <canvas id="dataGrowthChart" width="400" height="200"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Settings Tab -->
+                <div x-show="activeTab === 'settings'" class="space-y-6">
+                    <h2 class="text-2xl font-bold text-gray-900">Settings</h2>
+                    
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <h3 class="text-lg font-semibold mb-4">App Configuration</h3>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">App Name</label>
+                                <input type="text" value="{{appName}}" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Theme Color</label>
+                                <input type="color" value="#3B82F6" class="mt-1 block w-20 h-10 border-gray-300 rounded-md">
+                            </div>
+                            <button class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg">
+                                Save Settings
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        function adminDashboard() {
+            return {
+                activeTab: 'dashboard',
+                data: {
+                    {{#each databaseSchema.tables}}
+                    {{name}}: [],
+                    {{/each}}
+                },
+                stats: {
+                    {{#each databaseSchema.tables}}
+                    {{name}}: 0,
+                    {{/each}}
+                },
+                recentActivity: [
+                    { id: 1, message: 'New user registered', time: '2 minutes ago', icon: 'fas fa-user-plus' },
+                    { id: 2, message: 'Data updated', time: '5 minutes ago', icon: 'fas fa-edit' },
+                    { id: 3, message: 'Backup completed', time: '1 hour ago', icon: 'fas fa-save' }
+                ],
+
+                init() {
+                    this.loadData();
+                },
+
+                loadData() {
+                    // Simulate loading data
+                    {{#each databaseSchema.tables}}
+                    this.data.{{name}} = this.generateSampleData('{{name}}');
+                    this.stats.{{name}} = this.data.{{name}}.length;
+                    {{/each}}
+                },
+
+                generateSampleData(tableName) {
+                    // Generate sample data for demonstration
+                    const sampleData = [];
+                    for (let i = 1; i <= 10; i++) {
+                        sampleData.push({
+                            id: i,
+                            {{#each databaseSchema.tables}}
+                            {{#each fields}}
+                            {{#eq ../name '${tableName}'}}
+                            {{name}}: this.generateSampleValue('{{type}}', '{{name}}'),
+                            {{/eq}}
+                            {{/each}}
+                            {{/each}}
+                        });
+                    }
+                    return sampleData;
+                },
+
+                generateSampleValue(type, fieldName) {
+                    switch (type) {
+                        case 'string':
+                            return `Sample ${fieldName} ${Math.floor(Math.random() * 100)}`;
+                        case 'integer':
+                            return Math.floor(Math.random() * 1000);
+                        case 'float':
+                            return (Math.random() * 100).toFixed(2);
+                        case 'boolean':
+                            return Math.random() > 0.5;
+                        case 'email':
+                            return `user${Math.floor(Math.random() * 100)}@example.com`;
+                        default:
+                            return `Sample value`;
+                    }
+                },
+
+                showCreateModal(tableName) {
+                    alert(`Create new ${tableName} - This would open a modal in a real implementation`);
+                },
+
+                editItem(tableName, item) {
+                    alert(`Edit ${tableName} item with ID: ${item.id} - This would open an edit modal`);
+                },
+
+                deleteItem(tableName, itemId) {
+                    if (confirm(`Are you sure you want to delete this ${tableName}?`)) {
+                        this.data[tableName] = this.data[tableName].filter(item => item.id !== itemId);
+                        this.stats[tableName] = this.data[tableName].length;
+                    }
+                },
+
+                logout() {
+                    if (confirm('Are you sure you want to logout?')) {
+                        window.location.href = '/login';
+                    }
+                }
+            }
+        }
+    </script>
+</body>
+</html>

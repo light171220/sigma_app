@@ -1,0 +1,72 @@
+name: {{snakeCase appName}}
+description: {{description}}
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  
+  # Amplify Flutter
+  amplify_flutter: ^1.5.0
+  amplify_auth_cognito: ^1.5.0
+  amplify_datastore: ^1.5.0
+  amplify_storage_s3: ^1.5.0
+  amplify_api: ^1.5.0
+  
+  # UI Dependencies
+  cupertino_icons: ^1.0.6
+  
+  # State Management
+  provider: ^6.1.1
+  
+  # HTTP Client
+  http: ^1.1.0
+  
+  # JSON Serialization
+  json_annotation: ^4.8.1
+  
+  # Image Loading
+  cached_network_image: ^3.3.0
+  
+  # Form Validation
+  formz: ^0.6.1
+  
+  # DateTime Formatting
+  intl: ^0.18.1
+  
+  # Device Info
+  device_info_plus: ^9.1.0
+  
+  # Connectivity
+  connectivity_plus: ^4.0.2
+  
+  # Shared Preferences
+  shared_preferences: ^2.2.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  
+  flutter_lints: ^3.0.1
+  
+  # Code Generation
+  build_runner: ^2.4.7
+  json_serializable: ^6.7.1
+
+flutter:
+  uses-material-design: true
+  
+  assets:
+    - assets/images/
+    - assets/icons/
+  
+  fonts:
+    - family: {{theme.fontFamily}}
+      fonts:
+        - asset: fonts/{{theme.fontFamily}}-Regular.ttf
+        - asset: fonts/{{theme.fontFamily}}-Bold.ttf
+          weight: 700

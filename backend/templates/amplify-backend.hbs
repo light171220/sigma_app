@@ -1,0 +1,28 @@
+import { defineBackend } from "@aws-amplify/backend";
+import { auth } from "./auth/resource";
+import { data } from "./data/resource";
+import { storage } from "./storage/resource";
+
+export const backend = defineBackend({
+  auth,
+  data,
+  storage,
+});
+
+backend.addOutput({
+  custom: {
+    API: {
+      [data.resourceName]: {
+        endpoint: data.graphqlEndpoint,
+        region: backend.Stack.of(data).region,
+        authorizationType: "AMAZON_COGNITO_USER_POOLS",
+        additionalAuthorizationModes: [
+          {
+            authorizationType: "API_KEY",
+            expirationTime: "30d",
+          },
+        ],
+      },
+    },
+  },
+});
